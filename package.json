@@ -5,20 +5,29 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "db": "node scripts/init_db.js"
+    "db": "node scripts/init_db.js",
+    "test:e2e": "node scripts/run-cypress.js",
+    "cypress:run": "cypress run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^26.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "@faker-js/faker": "^10.5.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "express": "^4.21.2",
+    "faker": "^6.6.6",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "open": "^10.1.0",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^6.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "cypress": "^15.20.0"
   }
 }
