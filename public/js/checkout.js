@@ -159,15 +159,15 @@ document.addEventListener("DOMContentLoaded", function () {
       paymentMethod: paymentMethod,
       createAccount: createAccountCheckbox.checked,
       cardNumber:
-        paymentMethod === "card"
+        paymentMethod === "credit_card"
           ? document.getElementById("card-number").value
           : null,
       cardExpiry:
-        paymentMethod === "card"
+        paymentMethod === "credit_card"
           ? document.getElementById("card-expiry").value
           : null,
       cardCvc:
-        paymentMethod === "card"
+        paymentMethod === "credit_card"
           ? document.getElementById("card-cvc").value
           : null,
       boletoCode: paymentMethod === "boleto" ? boletoCode.textContent : null,

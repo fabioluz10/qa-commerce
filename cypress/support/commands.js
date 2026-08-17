@@ -23,3 +23,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("clearCart", (userId = 1) => {
+	return cy.request({
+		method: "DELETE",
+		url: `${Cypress.env("apiBaseUrl")}/carrinho/${userId}`,
+		failOnStatusCode: false,
+	});
+});

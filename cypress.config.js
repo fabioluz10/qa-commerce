@@ -13,24 +13,19 @@ module.exports = defineConfig({
   },
 
   e2e: {
-    // Define a URL base usada pelo Cypress para acessar a aplicação local.
     baseUrl: "http://localhost:3000",
-    // Faz o Cypress buscar arquivos .feature como especificações de teste.
     specPattern: "**/*.feature",
-    //os reporter serve para demosntrar no log do terminal o resultado dos testes, e o reporterOptions serve para configurar o local onde será salvo o relatório.
-     reporter: 'json',
+    defaultCommandTimeout: 10000,
     reporterOptions: {
       reportDir: 'cypress/reports',
       overwrite: true
     },
     setupNodeEvents(on, config) {
-      // Ativa o suporte ao Cucumber/Gherkin no Cypress.
       addCucumberPreprocessorPlugin(on, config);
-      // Configura o Allure para gerar relatórios de teste.
+
       allureCypress(on, config, {
         resultsDir: "allure-results",
       });
-      // Configura o bundler para processar os arquivos de teste corretamente.
       on(
         "file:preprocessor",
         createBundler({

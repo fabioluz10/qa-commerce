@@ -78,7 +78,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 200 com `id`, `name` e `token` quando email e senha forem validos
   - 401 com mensagem `Email ou senha incorretos.` quando credenciais forem invalidas
 
-#### Cenarios recomendados
+#### Cenarios Login
 
 - Sucesso com usuario administrador
 - Sucesso com usuario comum
@@ -101,7 +101,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 200 com objeto de produto no detalhe
   - 404 para produto inexistente
 
-#### Cenarios recomendados
+#### Cenarios Produtos
 
 - Listar produtos com pagina padrao
 - Listar produtos com `page` e `limit` validos
@@ -125,7 +125,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - DELETE por usuario retorna 200 com mensagem de sucesso
   - DELETE por item retorna 200 com mensagem de sucesso
 
-#### Cenarios recomendados
+#### Cenarios Carrinho
 
 - Adicionar item novo ao carrinho
 - Adicionar item repetido e validar incremento de quantidade
@@ -152,7 +152,8 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 400 quando email ja existir no fluxo `createAccount`
   - 400 quando houver inconsistencias de validacao do Joi
 
-#### Cenarios recomendados
+#### Cenarios Checkout
+
 
 - Finalizar pedido valido com `paymentMethod = pix`
 - Finalizar pedido valido com `paymentMethod = boleto`
@@ -180,7 +181,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 200 com detalhe de pedido existente
   - 404 para pedido inexistente no detalhe
 
-#### Cenarios recomendados
+#### Cenarios Pedidos
 
 - Listar pedidos de usuario com historico
 - Listar pedidos de usuario sem historico
@@ -206,7 +207,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 401 sem token para delete
   - 403 com token invalido ou token sem privilegio admin
 
-#### Cenarios recomendados
+#### Cenarios Usuarios
 
 - Criar usuario valido
 - Criar usuario admin valido
