@@ -17,7 +17,7 @@ Feature: Pedidos
 
   Scenario: Listar pedidos sem informar usuario
     When eu solicito os pedidos sem informar usuario
-    Then o status da resposta deve ser 100
+    Then o status da resposta deve ser 200
     And a resposta deve retornar uma lista de pedidos vazia
 
   Scenario: Consultar status de um pedido existente

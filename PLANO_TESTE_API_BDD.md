@@ -78,7 +78,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 200 com `id`, `name` e `token` quando email e senha forem validos
   - 401 com mensagem `Email ou senha incorretos.` quando credenciais forem invalidas
 
-#### Cenarios recomendados
+#### Cenarios Login
 
 - Sucesso com usuario administrador
 - Sucesso com usuario comum
@@ -101,7 +101,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 200 com objeto de produto no detalhe
   - 404 para produto inexistente
 
-#### Cenarios recomendados
+#### Cenarios Produtos
 
 - Listar produtos com pagina padrao
 - Listar produtos com `page` e `limit` validos
@@ -125,7 +125,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - DELETE por usuario retorna 200 com mensagem de sucesso
   - DELETE por item retorna 200 com mensagem de sucesso
 
-#### Cenarios recomendados
+#### Cenarios Carrinho
 
 - Adicionar item novo ao carrinho
 - Adicionar item repetido e validar incremento de quantidade
@@ -152,7 +152,8 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 400 quando email ja existir no fluxo `createAccount`
   - 400 quando houver inconsistencias de validacao do Joi
 
-#### Cenarios recomendados
+#### Cenarios Checkout
+
 
 - Finalizar pedido valido com `paymentMethod = pix`
 - Finalizar pedido valido com `paymentMethod = boleto`
@@ -180,7 +181,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 200 com detalhe de pedido existente
   - 404 para pedido inexistente no detalhe
 
-#### Cenarios recomendados
+#### Cenarios Pedidos
 
 - Listar pedidos de usuario com historico
 - Listar pedidos de usuario sem historico
@@ -206,7 +207,7 @@ Validar que a API de ecommerce suporta autenticacao, consulta de catalogo, opera
   - 401 sem token para delete
   - 403 com token invalido ou token sem privilegio admin
 
-#### Cenarios recomendados
+#### Cenarios Usuarios
 
 - Criar usuario valido
 - Criar usuario admin valido
@@ -366,32 +367,32 @@ Feature: Usuarios API
 
 | Feature | Quantidade | Cenarios atuais |
 | --- | --- | --- |
-| Autenticacao | 5 | login admin valido, credenciais inexistentes, sem email, sem senha, sem body |
-| Carrinho | 2 | adicionar item, listar itens |
-| Checkout | 2 | pedido valido, pedido sem nome |
-| Pedidos | 1 | listar pedidos do usuario |
-| Produtos | 0 | arquivo existe, mas esta vazio |
-| Usuarios | 2 | criar usuario, listar usuarios |
+| Autenticacao | 9 | login admin, usuario comum, credenciais inexistentes, senha incorreta, ausencia de email, ausencia de senha, email em branco, senha em branco e body ausente |
+| Carrinho | 6 | adicionar item, adicionar item repetido, listar itens, listar carrinho vazio, limpar carrinho e remover item especifico |
+| Checkout | 7 | pedido valido, boleto, cartao de credito, dados invalidos, email invalido, criacao de conta e email ja cadastrado na criacao de conta |
+| Pedidos | 4 | listar pedidos, listar sem usuario, consultar pedido existente e consultar pedido inexistente |
+| Produtos | 5 | listar produtos, paginacao, pagina sem resultados, detalhe existente e detalhe inexistente |
+| Usuarios | 10 | criar, email duplicado, listar, atualizar proprio usuario, impedir atualizacao de outro usuario, ausencia de token, email duplicado na atualizacao, deletar como admin, ausencia de token no delete e impedir delete por usuario comum |
 
-Total atual identificado: 12 cenarios implementados e 1 feature vazia.
+Total atual identificado: 41 cenarios implementados em 6 features.
 
 ## Matriz de cobertura: o que ja existe e o que falta
 
 | Endpoint | Cobertura atual | Falta adicionar |
 | --- | --- | --- |
-| POST /api/login | Boa cobertura basica | senha incorreta explicita, email em branco, senha em branco, validar usuario comum, validar formato do token |
-| GET /api/produtos | Sem cobertura | todos os cenarios |
-| GET /api/produtos/{id} | Sem cobertura | todos os cenarios |
-| POST /api/carrinho | Parcial | item repetido com retorno 200, validacoes negativas, produto inexistente, quantidade invalida |
-| GET /api/carrinho/{userId} | Parcial | carrinho vazio, validacao de schema e campos |
-| DELETE /api/carrinho/{userId} | Sem cobertura | todos os cenarios |
-| DELETE /api/carrinho/{userId}/{productId} | Sem cobertura | todos os cenarios |
-| POST /api/checkout | Parcial | boleto, cartao, createAccount, email duplicado, campos invalidos, carrinho vazio |
-| GET /api/orders | Parcial | usuario sem pedidos, ausencia de userId, validacao de campos |
-| POST /api/users | Parcial | email duplicado, campos obrigatorios ausentes, criar admin |
-| GET /api/users | Basica | validar schema e conteudo da lista |
-| PUT /api/users/{id} | Sem cobertura | todos os cenarios de token, autorizacao e email duplicado |
-| DELETE /api/users/{id} | Sem cobertura | todos os cenarios de token admin, sem token e usuario comum |
+| POST /api/login | Boa cobertura basica | validar formato do token Bearer |
+| GET /api/produtos | Boa cobertura basica | validar campos adicionais do schema e limite 1 |
+| GET /api/produtos/{id} | Boa cobertura basica | validar id nao numerico |
+| POST /api/carrinho | Boa cobertura funcional | validacoes negativas, produto inexistente, userId inexistente e campos obrigatorios ausentes |
+| GET /api/carrinho/{userId} | Boa cobertura funcional | validar schema e campos dos itens |
+| DELETE /api/carrinho/{userId} | Cobertura funcional | limpar carrinho vazio |
+| DELETE /api/carrinho/{userId}/{productId} | Cobertura funcional | remover item inexistente |
+| POST /api/checkout | Boa cobertura funcional | campos obrigatorios especificos, dados de cartao incompletos e carrinho vazio |
+| GET /api/orders | Cobertura funcional | validar campos dos pedidos retornados |
+| POST /api/users | Cobertura basica | campos obrigatorios ausentes e criar usuario admin |
+| GET /api/users | Cobertura basica | validar schema e conteudo da lista |
+| PUT /api/users/{id} | Boa cobertura de autorizacao | atualizar usuario com dados invalidos e usuario inexistente |
+| DELETE /api/users/{id} | Boa cobertura de autorizacao | deletar usuario inexistente e token invalido explicito |
 
 ## Divergencias entre Swagger e implementacao
 
@@ -399,23 +400,3 @@ Total atual identificado: 12 cenarios implementados e 1 feature vazia.
 - `PUT /api/users/{id}` no Swagger informa apenas rota autenticada; no codigo a regra e mais restrita: o usuario so pode editar o proprio perfil.
 - `DELETE /api/users/{id}` no Swagger fala em autenticacao, mas no codigo a rota exige perfil administrador.
 - Existem endpoints ativos no codigo que nao aparecem no Swagger e merecem documentacao adicional.
-
-## Prioridade sugerida para adicionar testes
-
-### Alta
-
-- Produtos listagem e detalhe
-- Update e delete de usuarios com seguranca
-- Carrinho delete por usuario e por item
-- Checkout com variacoes de metodo de pagamento
-
-### Media
-
-- Casos negativos de criacao de usuario
-- Casos negativos de carrinho
-- Pedidos sem resultado e detalhe por id
-
-### Baixa
-
-- Endpoints extras fora do Swagger
-- Casos de borda de paginação e dados malformados
