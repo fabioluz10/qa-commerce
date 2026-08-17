@@ -2,6 +2,8 @@ name: Cypress API Tests End-to-End
 on:
     pull_request:
         branches: [main, "feature/*"]
+    push:
+        branches: [main, "feature/*"]
 jobs:
     cypress-run:
         runs-on: ubuntu-latest

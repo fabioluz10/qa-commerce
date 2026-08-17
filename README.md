@@ -1,6 +1,8 @@
 # QA-Commerce
 
-### Loja virtual Geek para simulação de testes 
+### Loja virtual Geek para simulação de testes
+
+<!-- teste do github actions pipeline -->
 
 ## Clonando e executando em sua máquina
 
@@ -102,6 +104,10 @@ Essa automação demonstra meus conhecimentos em:
 - Gherkin / BDD
 - organização de testes por funcionalidade
 - uso de endpoints reais contra uma aplicação local
+
+### Integração contínua (GitHub Actions)
+
+O workflow [.github/workflows/pipeline.yml](.github/workflows/pipeline.yml) roda automaticamente em push e pull requests para `main` e `feature/*`, executando `npm run test:e2e` e publicando o relatório Allure como artefato do job.
 
 
 
