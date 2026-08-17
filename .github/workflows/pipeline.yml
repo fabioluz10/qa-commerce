@@ -1,0 +1,24 @@
+name: Cypress API Tests End-to-End
+on:
+    pull_request:
+        branches: [main, "feature/*"]
+jobs:
+    cypress-run:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Clonar o projeto
+              uses: actions/checkout@v7
+            - name: Instalar Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: Instalar dependências
+              run: npm install
+            - name: Executar testes Cypress e gerar relatório Allure em headless
+              run: npm run test:e2e
+            - name: Upload do relatório Allure
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: allure-report
+                  path: allure-report
