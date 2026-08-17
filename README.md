@@ -7,6 +7,7 @@
 ### Pré-requisito:
 
 -Node.js - Você encontra em: https://nodejs.org/en/
+-Java/JRE 8 ou superior, necessário para o Allure Report
 -Visual Studio Code ( ou editor de sua prefrência) - você encontra em: https://code.visualstudio.com/download
 -Git: você encontra em: https://git-scm.com/downloads
 
@@ -49,23 +50,31 @@ Inclui neste projeto automação de testes de API usando Cypress com abordagem B
 ### Como rodar os testes de API
 
 1. Abra o terminal na raiz do projeto.
-2. Certifique-se de que a API esteja rodando:
-```bash
-npm start
-```
-3. Em outro terminal, você pode usar qualquer um destes comandos:
+2. Execute o fluxo completo em modo headless:
 
 ```bash
 npm run test:e2e
 ```
 
-ou
+Esse comando limpa os relatórios antigos, inicializa o banco, sobe a API, aguarda ela ficar disponível, executa os testes Cypress e gera o relatório em `allure-report`. O relatório é gerado mesmo que algum teste falhe.
+
+> O Allure Report depende de Java instalado e disponível no `PATH` do sistema.
+
+Para executar o mesmo fluxo e abrir o relatório visual no navegador ao final:
 
 ```bash
-npm run cypress:run
+npm run test:e2e:open
 ```
 
-> O comando `npm run test:e2e` é o mais prático porque já chama o fluxo completo da automação. O comando `npm run cypress:run` executa o Cypress diretamente.
+O comando `npm run cypress:run` continua disponível para executar somente o Cypress quando a API já estiver rodando.
+
+#### Comandos individuais do Allure
+
+```bash
+npm run allure:clear      # remove allure-results/ e allure-report/
+npm run allure:generate   # gera o relatório em allure-report a partir de allure-results
+npm run allure:open       # abre o relatório já gerado no navegador
+```
 
 Se quiser rodar apenas uma suíte específica, pode usar:
 
@@ -87,7 +96,7 @@ npx cypress run --spec "cypress/e2e/features/api_autenticacao.feature,cypress/e2
 - Step definitions: [cypress/support/step_definitions](cypress/support/step_definitions)
 - Configuração do Cypress: [cypress.config.js](cypress.config.js)
 
-Essa automação demonstra conhecimento em:
+Essa automação demonstra meus conhecimentos em:
 - testes de API
 - uso de Cypress
 - Gherkin / BDD

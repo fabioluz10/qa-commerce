@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore artifacts:
+node_modules
+package-lock.json
+videos
+screenshots
+reports
+allure-results
+allure-report

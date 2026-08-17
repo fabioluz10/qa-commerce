@@ -1,56 +1,76 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
 import AutenticacaoService from "../services/autenticacao.service";
 import autenticacaoPayloads from "../payloads/autenticacao.payloads";
+import ApiService from "../services/api.service";
 
 //Given-Dado
 //When-Quando
 //Then-Entao
 
-let response;
-
-Given("Dado que envio uma requisição POST para o endpoint de login", () => {
-  // este passo pode ficar vazio ou servir como ponto de entrada do cenário
-});
-
-When("Quando envio com credenciais Admin", () => {
+When("envio com credenciais Admin", () => {
   AutenticacaoService.login(autenticacaoPayloads.admin).then((res) => {
-    response = res;
+    ApiService.setResponse(res);
   });
 });
 
-When("Quando envio com credenciais inexistente", () => {
+When("envio com credenciais de usuário comum", () => {
+  AutenticacaoService.criarUsuarioComumParaLogin().then((payload) => {
+    AutenticacaoService.login({
+      email: payload.email,
+      password: payload.password,
+    }).then((res) => {
+      ApiService.setResponse(res);
+    });
+  });
+});
+
+When("envio com credenciais inexistente", () => {
   AutenticacaoService.login(autenticacaoPayloads.credenciaisInexistentes).then((res) => {
-    response = res;
+    ApiService.setResponse(res);
   });
 });
 
-When("Quando envio sem informar e-mail", () => {
+When("envio com senha incorreta", () => {
+  AutenticacaoService.login(autenticacaoPayloads.senhaIncorreta).then((res) => {
+    ApiService.setResponse(res);
+  });
+});
+
+When("envio sem informar e-mail", () => {
   AutenticacaoService.login(autenticacaoPayloads.semEmail).then((res) => {
-    response = res;
+    ApiService.setResponse(res);
   });
 });
 
-When("Quando envio sem informar senha", () => {
+When("envio sem informar senha", () => {
   AutenticacaoService.login(autenticacaoPayloads.semSenha).then((res) => {
-    response = res;
+    ApiService.setResponse(res);
   });
 });
 
-When("Quando envio sem informar body da requisição", () => {
-  const Request_enviada = AutenticacaoService.login(autenticacaoPayloads.semEmailESenha);
+When("envio com e-mail em branco", () => {
+  AutenticacaoService.login(autenticacaoPayloads.emailEmBranco).then((res) => {
+    ApiService.setResponse(res);
+  });
+});
+
+When("envio com senha em branco", () => {
+  AutenticacaoService.login(autenticacaoPayloads.senhaEmBranco).then((res) => {
+    ApiService.setResponse(res);
+  });
+});
+
+When("envio sem informar body da requisição", () => {
+  const Request_enviada = AutenticacaoService.login(autenticacaoPayloads.sembody);
   cy.log(Request_enviada);
   AutenticacaoService.login(autenticacaoPayloads.sembody).then((res) => {
-    response = res;
+    ApiService.setResponse(res);
   });
 });
 
-Then("Então o status da resposta deve ser {int}", (statusEsperado) => {
-  cy.log(`Status da resposta: ${response.status}`);
-  cy.log(`Status esperado: ${statusEsperado}`);
-  expect(response.status).to.eq(statusEsperado);
-});
 
-Then("E a request deve conter Id, Name e token de autenticação", () => {
+Then("a request deve conter Id, Name e token de autenticação", () => {
+  const response = ApiService.getResponse();
   cy.log(`Response body:`, response.body);
   expect(response.body).to.have.property("id");
   expect(response.body).to.have.property("name");
@@ -58,6 +78,7 @@ Then("E a request deve conter Id, Name e token de autenticação", () => {
   expect(response.body.token).to.include("Bearer");
 });
 
-Then("E o corpo da resposta deve conter a mensagem {string}", (MensagemEsperada) => {
+Then("o corpo da resposta deve conter a mensagem {string}", (MensagemEsperada) => {
+  const response = ApiService.getResponse();
   expect(response.body.message).to.eq(`${MensagemEsperada}.`);
 });

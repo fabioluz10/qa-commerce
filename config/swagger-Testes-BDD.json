@@ -1,0 +1,926 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "QA-Commerce API - Cenarios BDD",
+    "version": "1.0.0-bdd",
+    "description": "Contrato para chamadas manuais no Insomnia, cobrindo os cenarios de testes BDD implementados no projeto."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "tags": [
+    { "name": "Autenticacao" },
+    { "name": "Produtos" },
+    { "name": "Carrinho" },
+    { "name": "Checkout" },
+    { "name": "Pedidos" },
+    { "name": "Usuarios" }
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "tags": ["Autenticacao"],
+        "summary": "Login de usuario",
+        "description": "Cenarios: admin valido, usuario comum valido, credenciais invalidas, sem email, sem senha, email/senha em branco e sem body.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" },
+              "examples": {
+                "adminValido": {
+                  "value": { "email": "admin@admin.com", "password": "admin" }
+                },
+                "senhaIncorreta": {
+                  "value": { "email": "admin@admin.com", "password": "senha-incorreta" }
+                },
+                "semEmail": {
+                  "value": { "password": "admin" }
+                },
+                "semSenha": {
+                  "value": { "email": "admin@admin.com" }
+                },
+                "emailEmBranco": {
+                  "value": { "email": "", "password": "admin" }
+                },
+                "senhaEmBranco": {
+                  "value": { "email": "admin@admin.com", "password": "" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login bem-sucedido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Email ou senha incorretos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "examples": {
+                  "credenciaisInvalidas": {
+                    "value": { "message": "Email ou senha incorretos." }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/produtos": {
+      "get": {
+        "tags": ["Produtos"],
+        "summary": "Listar produtos com paginacao",
+        "description": "Cenarios: listagem padrao, com page/limit, e pagina sem resultados.",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 9 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos paginada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProdutosPaginadosResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar produtos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "erroBusca": { "value": { "error": "Erro ao buscar produtos." } },
+                  "erroTotal": { "value": { "error": "Erro ao calcular o total de produtos." } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/produtos/{id}": {
+      "get": {
+        "tags": ["Produtos"],
+        "summary": "Detalhar produto",
+        "description": "Cenarios: produto existente e inexistente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Produto" }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto nao encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Produto não encontrado." }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar detalhes",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao buscar detalhes do produto." }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/carrinho": {
+      "post": {
+        "tags": ["Carrinho"],
+        "summary": "Adicionar item no carrinho",
+        "description": "Cenarios: inserir item novo (201) e item repetido com incremento de quantidade (200).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CarrinhoRequest" },
+              "examples": {
+                "novoItem": {
+                  "value": { "userId": 9999, "productId": 1, "quantity": 1 }
+                },
+                "itemRepetido": {
+                  "value": { "userId": 9999, "productId": 1, "quantity": 3 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item ja existia, quantidade incrementada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Produto adicionado ao carrinho com sucesso." }
+              }
+            }
+          },
+          "201": {
+            "description": "Item criado no carrinho",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CarrinhoInsertResponse" },
+                "example": { "message": "Produto adicionado ao carrinho com sucesso.", "id": 12 }
+              }
+            }
+          },
+          "500": {
+            "description": "Erros de carrinho",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "erroBusca": { "value": { "error": "Erro ao buscar produto no carrinho." } },
+                  "erroUpdate": { "value": { "error": "Erro ao atualizar quantidade do produto no carrinho." } },
+                  "erroInsert": { "value": { "error": "Erro ao adicionar produto ao carrinho." } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/carrinho/{userId}": {
+      "get": {
+        "tags": ["Carrinho"],
+        "summary": "Listar itens do carrinho por usuario",
+        "description": "Cenarios: carrinho com itens e carrinho vazio.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de itens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CarrinhoItem" }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar itens",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao buscar produtos no carrinho." }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Carrinho"],
+        "summary": "Remover todos os itens do carrinho do usuario",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Carrinho limpo",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Todos os itens do carrinho removidos com sucesso." }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao limpar carrinho",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao remover itens do carrinho." }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/carrinho/{userId}/{productId}": {
+      "delete": {
+        "tags": ["Carrinho"],
+        "summary": "Remover item especifico do carrinho",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item removido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Item do carrinho removido com sucesso." }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao remover item",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao remover item do carrinho." }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/checkout": {
+      "post": {
+        "tags": ["Checkout"],
+        "summary": "Finalizar checkout",
+        "description": "Cenarios: pix, boleto, cartao, sem nome, email invalido, criar conta e email ja cadastrado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CheckoutRequest" },
+              "examples": {
+                "pixValido": {
+                  "value": {
+                    "userId": 1,
+                    "firstName": "Maria",
+                    "lastName": "Silva",
+                    "address": "Rua das Flores",
+                    "number": "123",
+                    "cep": "12345678",
+                    "phone": "11999999999",
+                    "email": "maria@example.com",
+                    "paymentMethod": "pix",
+                    "createAccount": false
+                  }
+                },
+                "boletoValido": {
+                  "value": {
+                    "userId": 1,
+                    "firstName": "Maria",
+                    "lastName": "Silva",
+                    "address": "Rua das Flores",
+                    "number": "123",
+                    "cep": "12345678",
+                    "phone": "11999999999",
+                    "email": "maria@example.com",
+                    "paymentMethod": "boleto",
+                    "boletoCode": "34191.79001 01043.510047 91020.150008 5 95870000002000",
+                    "createAccount": false
+                  }
+                },
+                "cartaoValido": {
+                  "value": {
+                    "userId": 1,
+                    "firstName": "Maria",
+                    "lastName": "Silva",
+                    "address": "Rua das Flores",
+                    "number": "123",
+                    "cep": "12345678",
+                    "phone": "11999999999",
+                    "email": "maria@example.com",
+                    "paymentMethod": "credit_card",
+                    "cardNumber": "1234123412341234",
+                    "cardExpiry": "12/2030",
+                    "cardCvc": "123",
+                    "createAccount": false
+                  }
+                },
+                "emailInvalido": {
+                  "value": {
+                    "userId": 1,
+                    "firstName": "Maria",
+                    "lastName": "Silva",
+                    "address": "Rua das Flores",
+                    "number": "123",
+                    "cep": "12345678",
+                    "phone": "11999999999",
+                    "email": "email-invalido",
+                    "paymentMethod": "pix",
+                    "createAccount": false
+                  }
+                },
+                "criarConta": {
+                  "value": {
+                    "firstName": "Maria",
+                    "lastName": "Silva",
+                    "address": "Rua das Flores",
+                    "number": "123",
+                    "cep": "12345678",
+                    "phone": "11999999999",
+                    "email": "nova-conta@example.com",
+                    "paymentMethod": "pix",
+                    "createAccount": true,
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pedido finalizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validacao",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "joi": { "value": "\"firstName\" is required" },
+                  "emailJaCadastrado": { "value": { "message": "E-mail já registrado. Tente um email diferente" } }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erros internos no checkout",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "erroVerificarEmail": { "value": { "error": "Erro ao verificar e-mail." } },
+                  "erroCriarConta": { "value": { "error": "Erro ao criar conta." } },
+                  "erroTotalPedido": { "value": { "error": "Erro ao calcular total do pedido." } },
+                  "erroFinalizar": { "value": { "error": "Erro ao finalizar pedido." } },
+                  "erroAtualizarNumero": { "value": { "error": "Erro ao atualizar número do pedido." } },
+                  "erroLimparCarrinho": { "value": { "error": "Erro ao limpar o carrinho." } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "tags": ["Pedidos"],
+        "summary": "Listar pedidos por usuario",
+        "description": "Cenarios: com userId e sem userId (retorna lista vazia).",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pedidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Pedido" }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar pedidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao buscar pedidos." }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders/{orderId}": {
+      "get": {
+        "tags": ["Pedidos"],
+        "summary": "Consultar pedido por id",
+        "description": "Cenarios: pedido existente e inexistente.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PedidoComFormato" }
+              }
+            }
+          },
+          "404": {
+            "description": "Pedido nao encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Pedido não encontrado." }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar status do pedido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao buscar status do pedido." }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "post": {
+        "tags": ["Usuarios"],
+        "summary": "Criar usuario",
+        "description": "Cenarios: sucesso e email duplicado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserCreateRequest" },
+              "examples": {
+                "valido": {
+                  "value": {
+                    "name": "Carlos",
+                    "email": "carlos@example.com",
+                    "password": "123456",
+                    "isAdmin": false
+                  }
+                },
+                "emailDuplicado": {
+                  "value": {
+                    "name": "Carlos",
+                    "email": "admin@admin.com",
+                    "password": "123456",
+                    "isAdmin": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario criado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserCreateResponse" },
+                "example": { "message": "Usuário criado com sucesso.", "id": 20 }
+              }
+            }
+          },
+          "400": {
+            "description": "Email ja cadastrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Email já cadastrado." }
+              }
+            }
+          },
+          "500": {
+            "description": "Erros internos de usuario",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "erroVerificarEmail": { "value": { "error": "Erro ao verificar o email." } },
+                  "erroSenha": { "value": { "error": "Erro ao processar a senha." } },
+                  "erroCriar": { "value": { "error": "Erro ao criar usuário. Verifique as regras de negócio" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Usuarios"],
+        "summary": "Listar usuarios",
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserPublic" }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao listar usuarios",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao listar usuários." }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "put": {
+        "tags": ["Usuarios"],
+        "summary": "Atualizar usuario",
+        "description": "Cenarios: sucesso no proprio usuario, sem token, token invalido, update de terceiro e email duplicado.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserUpdateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario atualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Usuário atualizado com sucesso." }
+              }
+            }
+          },
+          "400": {
+            "description": "Email ja usado por outro usuario",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Email já cadastrado por outro usuário." }
+              }
+            }
+          },
+          "401": {
+            "description": "Token nao fornecido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Token não fornecido." }
+              }
+            }
+          },
+          "403": {
+            "description": "Token invalido ou tentativa de editar outro usuario",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "examples": {
+                  "tokenInvalido": { "value": { "message": "Token inválido." } },
+                  "editarTerceiro": { "value": { "message": "Acesso negado. Você só pode editar seu próprio perfil." } }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erros internos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "erroVerificarEmail": { "value": { "error": "Erro ao verificar o email." } },
+                  "erroAtualizar": { "value": { "error": "Erro ao atualizar o usuário." } },
+                  "erroSenha": { "value": { "error": "Erro ao processar a senha." } }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Usuarios"],
+        "summary": "Deletar usuario",
+        "description": "Cenarios: admin pode deletar, sem token e usuario comum bloqueados.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario deletado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Usuário deletado com sucesso." }
+              }
+            }
+          },
+          "401": {
+            "description": "Token ausente",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "message": "Token ausente." }
+              }
+            }
+          },
+          "403": {
+            "description": "Token invalido ou sem permissao de admin",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "examples": {
+                  "tokenInvalido": { "value": { "message": "Token inválido." } },
+                  "semPermissao": { "value": { "message": "Acesso negado. Apenas administradores." } }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao deletar usuario",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "error": "Erro ao deletar o usuário." }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enviar token retornado no login, incluindo o prefixo Bearer."
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "example": "admin@admin.com" },
+          "password": { "type": "string", "example": "admin" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "token": { "type": "string", "example": "Bearer eyJ..." }
+        }
+      },
+      "Produto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "price": { "type": "number" },
+          "image": { "type": "string" }
+        }
+      },
+      "ProdutosPaginadosResponse": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Produto" }
+          },
+          "totalPages": { "type": "integer" },
+          "currentPage": { "type": "integer" }
+        }
+      },
+      "CarrinhoRequest": {
+        "type": "object",
+        "required": ["userId", "productId", "quantity"],
+        "properties": {
+          "userId": { "type": "integer" },
+          "productId": { "type": "integer" },
+          "quantity": { "type": "integer" }
+        }
+      },
+      "CarrinhoInsertResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "id": { "type": "integer" }
+        }
+      },
+      "CarrinhoItem": {
+        "type": "object",
+        "properties": {
+          "productId": { "type": "integer" },
+          "name": { "type": "string" },
+          "price": { "type": "number" },
+          "quantity": { "type": "integer" }
+        }
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "required": ["firstName", "lastName", "address", "number", "cep", "email", "paymentMethod"],
+        "properties": {
+          "userId": { "type": "integer" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "address": { "type": "string" },
+          "number": { "type": "string" },
+          "cep": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "paymentMethod": { "type": "string", "enum": ["credit_card", "boleto", "pix"] },
+          "cardNumber": { "type": "string", "nullable": true },
+          "cardExpiry": { "type": "string", "nullable": true },
+          "cardCvc": { "type": "string", "nullable": true },
+          "boletoCode": { "type": "string", "nullable": true },
+          "pixKey": { "type": "string", "nullable": true },
+          "createAccount": { "type": "boolean" },
+          "password": { "type": "string" }
+        }
+      },
+      "CheckoutResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "orderNumber": { "type": "string" }
+        }
+      },
+      "Pedido": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "user_id": { "type": "integer" },
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" },
+          "address": { "type": "string" },
+          "number": { "type": "string" },
+          "cep": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "payment_method": { "type": "string" },
+          "total_price": { "type": "number" },
+          "status": { "type": "string" },
+          "formattedOrderId": { "type": "string" }
+        }
+      },
+      "PedidoComFormato": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Pedido" }
+        ]
+      },
+      "UserCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" },
+          "isAdmin": { "type": "boolean" }
+        }
+      },
+      "UserCreateResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "id": { "type": "integer" }
+        }
+      },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "UserPublic": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "isAdmin": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

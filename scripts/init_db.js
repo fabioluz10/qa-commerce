@@ -75,6 +75,15 @@ db.serialize(() => {
     `);
     console.log("Tabelas criadas com sucesso.");
 
+    // Limpar o carrinho para garantir estado inicial previsivel em cada subida do banco
+    db.run("DELETE FROM Cart", (err) => {
+        if (err) {
+            console.error('Erro ao limpar a tabela Cart:', err.message);
+        } else {
+            console.log('Tabela Cart limpa com sucesso.');
+        }
+    });
+
     // Inserir dados de exemplo para produtos
     const products = [
         { name: 'Xícara Const', description: 'Xícara em porcelana. Capacidade: 270ml.', price: 40.0, image: 'images/produtos/imagem8.jpeg' },

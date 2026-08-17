@@ -5,40 +5,55 @@ Feature: Autenticacao
     Quero me autenticar na aplicação
     Para fazer meu pedido de compra
 
-//Given-Dado
-//When-Quando
-//Then-Entao
+# Given-Dado
+# When-Quando
+# Then-Entao
 
-//estou utilizando Background para economizar linhas de código, pois ele se repete em todos os cenários.
+# Estou utilizando Background para economizar linhas de codigo, pois ele se repete em todos os cenarios.
   Background: Envio de Autenticacao
-    Given Dado que envio uma requisição POST para o endpoint de login
+    Given que a API de "Login" esteja disponível em "http://localhost:3000/api/login"
 
   Scenario: Autenticação de usuário Admin com sucesso
-//  Given Dado que envio uma requisição POST para o endpoint de login
-    When Quando envio com credenciais Admin
-    Then Então o status da resposta deve ser 200
-    And E a request deve conter Id, Name e token de autenticação
+    When envio com credenciais Admin
+    Then o status da resposta deve ser 200
+    And a request deve conter Id, Name e token de autenticação
+
+  Scenario: Autenticação de usuário comum com sucesso
+    When envio com credenciais de usuário comum
+    Then o status da resposta deve ser 200
+    And a request deve conter Id, Name e token de autenticação
 
   Scenario: Autenticação de usuário com credenciais inexistente
-//  Given Dado que envio uma requisição POST para o endpoint de login
-    When Quando envio com credenciais inexistente
-    Then Então o status da resposta deve ser 401
-    And E o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+    When envio com credenciais inexistente
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+
+  Scenario: Autenticação de usuário com senha incorreta
+    When envio com senha incorreta
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
 
   Scenario: Autenticação de usuário sem informar e-mail
-//  Given Dado que envio uma requisição POST para o endpoint de login
-    When Quando envio sem informar e-mail
-    Then Então o status da resposta deve ser 401
-    And E o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+    When envio sem informar e-mail
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
 
   Scenario: Autenticação de usuário sem informar senha
-//  Given Dado que envio uma requisição POST para o endpoint de login
-    When Quando envio sem informar senha
-    Then Então o status da resposta deve ser 401
-    And E o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+    When envio sem informar senha
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+
+  Scenario: Autenticação de usuário com e-mail em branco
+    When envio com e-mail em branco
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+
+  Scenario: Autenticação de usuário com senha em branco
+    When envio com senha em branco
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
 
   Scenario: Autenticação de usuário sem informar body da requisição
-//  Given Dado que envio uma requisição POST para o endpoint de login
-    When Quando envio sem informar body da requisição
-    Then Então o status da resposta deve ser 401
-    And E o corpo da resposta deve conter a mensagem "Email ou senha incorretos"
+    When envio sem informar body da requisição
+    Then o status da resposta deve ser 401
+    And o corpo da resposta deve conter a mensagem "Email ou senha incorretos"

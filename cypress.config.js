@@ -1,4 +1,5 @@
 const { defineConfig } = require("cypress");
+import { allureCypress } from "allure-cypress/reporter";
 const createBundler = require("@bahmutov/cypress-esbuild-preprocessor");
 const { addCucumberPreprocessorPlugin } = require("@badeball/cypress-cucumber-preprocessor");
 const { createEsbuildPlugin } = require("@badeball/cypress-cucumber-preprocessor/esbuild");
@@ -25,7 +26,10 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // Ativa o suporte ao Cucumber/Gherkin no Cypress.
       addCucumberPreprocessorPlugin(on, config);
-
+      // Configura o Allure para gerar relatórios de teste.
+      allureCypress(on, config, {
+        resultsDir: "allure-results",
+      });
       // Configura o bundler para processar os arquivos de teste corretamente.
       on(
         "file:preprocessor",
