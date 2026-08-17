@@ -81,7 +81,7 @@ npm run allure:open       # abre o relatório já gerado no navegador
 Se quiser rodar apenas uma suíte específica, pode usar:
 
 ```bash
-npx cypress run --spec "cypress/e2e/features/api_autenticacao.feature,cypress/e2e/features/api_carrinho.feature,cypress/e2e/features/api_checkout.feature,cypress/e2e/features/api_pedidos.feature,cypress/e2e/features/api_usuarios.feature" --browser electron
+npx cypress run --spec "cypress/e2e/features/api_autenticacao.feature,cypress/e2e/features/api_carrinho.feature,cypress/e2e/features/api_checkout.feature,cypress/e2e/features/api_pedidos.feature,cypress/e2e/features/api_produtos.feature,cypress/e2e/features/api_usuarios.feature" --browser electron
 ```
 
 ### O que é validado
@@ -90,7 +90,10 @@ npx cypress run --spec "cypress/e2e/features/api_autenticacao.feature,cypress/e2
 - Carrinho
 - Checkout
 - Pedidos
+- Produtos
 - Usuários
+
+A suíte atual possui 41 cenários BDD distribuídos em 6 features. O detalhamento da cobertura e dos cenários planejados está disponível no [Plano de Teste API em BDD](PLANO_TESTE_API_BDD.md).
 
 ### Estrutura de automação
 
