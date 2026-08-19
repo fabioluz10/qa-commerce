@@ -3,9 +3,6 @@ Feature: Pedidos
   Quero consultar os pedidos da API
   Para acompanhar minhas compras
 
-# Given-Dado
-# When-Quando
-# Then-Entao
 
   Background: Envio de Pedidos
     Given que a API de "Pedidos" esteja disponível em "http://localhost:3000/api/orders"

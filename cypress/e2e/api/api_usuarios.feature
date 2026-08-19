@@ -3,9 +3,6 @@ Feature: Usuarios
   Quero gerenciar usuarios na API
   Para criar e consultar cadastros
 
-# Given-Dado
-# When-Quando
-# Then-Entao
 
   Background: Envio de Usuarios
     Given que a API de "Usuarios" esteja disponível em "http://localhost:3000/api/users"

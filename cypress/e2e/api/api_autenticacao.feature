@@ -1,15 +1,10 @@
-# Criação de cenários de testes
 
 Feature: Autenticacao
     Eu como cliente
     Quero me autenticar na aplicação
     Para fazer meu pedido de compra
 
-# Given-Dado
-# When-Quando
-# Then-Entao
 
-# Estou utilizando Background para economizar linhas de codigo, pois ele se repete em todos os cenarios.
   Background: Envio de Autenticacao
     Given que a API de "Login" esteja disponível em "http://localhost:3000/api/login"
 

@@ -3,9 +3,6 @@ Feature: Carrinho
   Quero interagir com o carrinho da API
   Para adicionar e consultar itens
 
-# Given-Dado
-# When-Quando
-# Then-Entao
 
   Background: Envio de Carrinho
     Given que a API de "Carrinho" esteja disponível em "http://localhost:3000/api/carrinho"

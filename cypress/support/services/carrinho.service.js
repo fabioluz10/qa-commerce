@@ -1,7 +1,6 @@
 const baseUrl = Cypress.env("apiBaseUrl");
 
 class CarrinhoService {
-  // Adiciona um produto ao carrinho de um usuário.
   static adicionar(payload) {
     return cy.request({
       method: "POST",
@@ -11,7 +10,6 @@ class CarrinhoService {
     });
   }
 
-  // Lista os produtos do carrinho de um usuário.
   static listar(userId) {
     return cy.request({
       method: "GET",
@@ -20,7 +18,6 @@ class CarrinhoService {
     });
   }
 
-  // Remove todos os produtos do carrinho de um usuário.
   static limpar(userId) {
     return cy.request({
       method: "DELETE",
@@ -29,7 +26,6 @@ class CarrinhoService {
     });
   }
 
-  // Remove um produto específico do carrinho de um usuário.
   static removerItem(userId, productId) {
     return cy.request({
       method: "DELETE",

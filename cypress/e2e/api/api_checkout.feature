@@ -3,9 +3,6 @@ Feature: Checkout
   Quero finalizar meu pedido na API
   Para concluir a compra
 
-# Given-Dado
-# When-Quando
-# Then-Entao
 
   Background: Envio de Checkout
     Given que a API de "Checkout" esteja disponível em "http://localhost:3000/api/checkout"

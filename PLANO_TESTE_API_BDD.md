@@ -5,7 +5,7 @@
 - Swagger UI: http://localhost:3000/api-docs/
 - Especificacao local: `config/swagger.json`
 - Implementacao real: `src/server.js`
-- Automacao atual: `cypress/e2e/features` e `cypress/support/step_definitions`
+- Automacao atual: `cypress/e2e/api`, `cypress/e2e/web` e `cypress/support/step_definitions`
 
 ## Observacao
 
@@ -356,12 +356,12 @@ Feature: Usuarios API
 
 ### Features existentes
 
-- `cypress/e2e/features/api_autenticacao.feature`
-- `cypress/e2e/features/api_carrinho.feature`
-- `cypress/e2e/features/api_checkout.feature`
-- `cypress/e2e/features/api_pedidos.feature`
-- `cypress/e2e/features/api_produtos.feature`
-- `cypress/e2e/features/api_usuarios.feature`
+- `cypress/e2e/api/api_autenticacao.feature`
+- `cypress/e2e/api/api_carrinho.feature`
+- `cypress/e2e/api/api_checkout.feature`
+- `cypress/e2e/api/api_pedidos.feature`
+- `cypress/e2e/api/api_produtos.feature`
+- `cypress/e2e/api/api_usuarios.feature`
 
 ### Cenarios ja implementados
 

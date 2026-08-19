@@ -139,7 +139,8 @@ O projeto usa Cypress com abordagem BDD em arquivos `.feature` e step definition
 
 ### Estrutura principal
 
-- `cypress/e2e/features` — cenários em Gherkin
+- `cypress/e2e/api` — cenários Gherkin dos testes de API
+- `cypress/e2e/web` — cenários Gherkin dos testes web
 - `cypress/support/step_definitions` — implementações dos passos
 - `cypress/support/pages` — Page Objects do front end
 - `cypress/support/payloads` — payloads de API
@@ -170,13 +171,13 @@ O projeto usa Cypress com abordagem BDD em arquivos `.feature` e step definition
 ### Executando uma feature específica
 
 ```bash
-npx cypress run --spec cypress/e2e/features/web_compra.feature
+npm run cypress:run:web
 ```
 
 Também é possível rodar uma suíte específica de API, por exemplo:
 
 ```bash
-npx cypress run --spec cypress/e2e/features/api_checkout.feature
+npm run cypress:run:api
 ```
 
 ## Relatório Allure

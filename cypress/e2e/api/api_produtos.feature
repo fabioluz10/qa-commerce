@@ -3,9 +3,6 @@ Feature: Produtos
 	Quero consultar os produtos da API
 	Para visualizar o catalogo da loja
 
-# Given-Dado
-# When-Quando
-# Then-Entao
 
 	Background: Envio de Produtos
 		Given que a API de "Produtos" esteja disponível em "http://localhost:3000/api/produtos"

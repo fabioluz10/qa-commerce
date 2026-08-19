@@ -3,7 +3,6 @@ import usuariosPayloads from "../payloads/usuarios.payloads";
 const baseUrl = Cypress.env("apiBaseUrl");
 
 class UsuariosService {
-  // Envia os dados para criar um novo usuário.
   static criar(payload) {
     return cy.request({
       method: "POST",
@@ -13,7 +12,6 @@ class UsuariosService {
     });
   }
 
-  // Gera os dados de um usuário temporário, cria esse usuário e retorna dados e resposta.
   static criarUsuarioTemporario(overrides = {}) {
     const payload = usuariosPayloads.novoUsuario(overrides);
 
@@ -23,7 +21,6 @@ class UsuariosService {
     }));
   }
 
-  // Solicita a lista de usuários cadastrados.
   static listar() {
     return cy.request({
       method: "GET",
@@ -32,7 +29,6 @@ class UsuariosService {
     });
   }
 
-  // Atualiza os dados de um usuário, usando o token quando ele for informado.
   static atualizar(userId, payload, token) {
     return cy.request({
       method: "PUT",
@@ -43,7 +39,6 @@ class UsuariosService {
     });
   }
 
-  // Exclui um usuário, usando o token de autorização quando ele for informado.
   static deletar(userId, token) {
     return cy.request({
       method: "DELETE",

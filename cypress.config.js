@@ -14,7 +14,7 @@ module.exports = defineConfig({
 
   e2e: {
     baseUrl: "http://localhost:3000",
-    specPattern: "**/*.feature",
+    specPattern: "cypress/e2e/**/*.feature",
     defaultCommandTimeout: 10000,
     reporterOptions: {
       reportDir: 'cypress/reports',

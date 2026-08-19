@@ -1,7 +1,6 @@
 import UsuariosService from "./usuarios.service";
 
 class AutenticacaoService {
-  // Envia as credenciais para o endpoint de login da API.
   static login(payload) {
     return cy.request({
       method: "POST",
@@ -11,7 +10,6 @@ class AutenticacaoService {
     });
   }
 
-  // Cria um usuário comum com dados únicos e retorna o payload usado no cadastro.
   static criarUsuarioComumParaLogin() {
     const payload = {
       name: `Usuario ${Date.now()}`,
@@ -23,7 +21,6 @@ class AutenticacaoService {
     return UsuariosService.criar(payload).then(() => payload);
   }
 
-  // Cria um usuário comum e usa as credenciais dele para fazer login.
   static loginComUsuarioComum() {
     return this.criarUsuarioComumParaLogin().then((payload) =>
       this.login({

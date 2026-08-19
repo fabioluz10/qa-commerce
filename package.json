@@ -10,6 +10,8 @@
     "test:e2e": "start-server-and-test start http://127.0.0.1:3000/api/produtos \"npm-run-all --continue-on-error cypress:run allure:generate\"",
     "test:e2e:open": "npm-run-all --continue-on-error test:e2e allure:open",
     "cypress:run": "cypress run",
+    "cypress:run:api": "cypress run --spec \"cypress/e2e/api/**/*.feature\"",
+    "cypress:run:web": "cypress run --spec \"cypress/e2e/web/**/*.feature\"",
     "allure:generate": "allure generate allure-results --clean -o allure-report",
     "allure:open": "allure open allure-report",
     "allure:clear": "rimraf allure-results allure-report"

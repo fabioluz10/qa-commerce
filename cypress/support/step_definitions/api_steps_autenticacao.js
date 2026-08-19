@@ -3,10 +3,6 @@ import AutenticacaoService from "../services/autenticacao.service";
 import autenticacaoPayloads from "../payloads/autenticacao.payloads";
 import ApiService from "../services/api.service";
 
-//Given-Dado
-//When-Quando
-//Then-Entao
-
 When("envio com credenciais Admin", () => {
   AutenticacaoService.login(autenticacaoPayloads.admin).then((res) => {
     ApiService.setResponse(res);
